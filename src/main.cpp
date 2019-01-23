@@ -1,82 +1,60 @@
+/**
+ * Send and Receive SMS with SIM900.
+ * 
+ * @author ElexParts<contact@elexparts.com>
+ * @url https://www.elexparts.com
+ */
+
 #include <Arduino.h>
 #include <SIM900.h>
 #include <SoftwareSerial.h>
-//If not used, is better to exclude the HTTP library,
-//for RAM saving.
-//If your sketch reboots itself proprably you have finished,
-//your memory available.
-//#include "inetGSM.h"
-
-//If you want to use the Arduino functions to manage SMS, uncomment the lines below.
 #include <sms.h>
+
 SMSGSM sms;
 
-//To change pins for Software Serial, use the two lines in GSM.cpp.
-
-//GSM Shield for Arduino
-//www.open-electronics.org
-//this code is based on the example of Arduino Labs.
-
-//Simple sketch to send and receive SMS.
-
-int numdata;
-boolean started=false;
+// Simple sketch to send and receive SMS.
+// To change pins for Software Serial, use the two lines in GSM.cpp.
+// _GSM_TXPIN_ was set to 2
+// _GSM_RXPIN_ was set to 3
+int gsmStatusLed = 12;
+boolean started = false;
 char smsbuffer[160];
 char n[20];
 
-void setup()
-{
-    pinMode(12, OUTPUT);
+void setup() {
+  pinMode(gsmStatusLed, OUTPUT);
 
-    //Serial connection.
-    Serial.begin(9600);
-    Serial.println("GSM Shield testing.");
-    //Start configuration of shield with baudrate.
-    //For http uses is raccomanded to use 4800 or slower.
-    if (gsm.begin(2400)) {
-        Serial.println("\nstatus=READY");
-        started=true;
-    } else Serial.println("\nstatus=IDLE");
+  // Serial connection.
+  Serial.begin(9600);
+  Serial.println("Initializing GSM Shield ...");
 
-    if(started) {
-        //Enable this two lines if you want to send an SMS.
-        //if (sms.SendSMS("639XXXXXXXXX", "Arduino SMS"))
-        //Serial.println("\nSMS sent OK");
+  // Start configuration of shield with baudrate (4800 or lower).
+  if (gsm.begin(2400)) {
+    Serial.println("\nGSM Status: READY");
+    started = true;
+  } else {
+    Serial.println("\nGSM Status: IDLE");
+  }
 
-        // Turn on LED when GSM is ready.
-        digitalWrite(12, HIGH);
-    }
+  if(started) {
+    // Turn on LED when GSM is ready.
+    digitalWrite(gsmStatusLed, HIGH);
+  }
 };
 
-void loop()
-{
-    char position;
-    char phone_num[20]; // array for the phone number string
-    char sms_text[100]; // array for the SMS text string
-
-    if(started) {
-      //Enable this two lines if you want to send an SMS.
-      if (sms.SendSMS("639000000000", "Arduino SMS"))
+void loop() {
+  if(started) {
+    // Test sending an SMS message.
+    if (sms.SendSMS("639000000000", "A text message to verify if GSM shield is working.")) {
       Serial.println("\nSMS sent OK");
-
-      //Read if there are messages on SIM card and print them.
-      // if(gsm.readSMS(smsbuffer, 160, n, 20)) {
-          // Serial.println(n);
-          // Serial.println(smsbuffer);
-      // }
-
-      position = sms.IsSMSPresent(SMS_UNREAD);
-      if (position) {
-        // there is new SMS => read it
-        sms.GetSMS(position, phone_num, sms_text, 100);
-        #ifdef DEBUG_PRINT
-          gsm.DebugPrint("DEBUG SMS phone number: ", 0);
-          gsm.DebugPrint(phone_num, 0);
-          gsm.DebugPrint("\r\n          SMS text: ", 0);
-          gsm.DebugPrint(sms_text, 1);
-        #endif
-      }
-
-      delay(1000);
     }
+
+    // Read if there are messages on SIM card and print them.
+    // if(gsm.readSMS(smsbuffer, 160, n, 20)) {
+    //   Serial.println(n);
+    //   Serial.println(smsbuffer);
+    // }
+
+    delay(1000);
+  }
 };
