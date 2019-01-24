@@ -39,21 +39,21 @@ void setup() {
   if(started) {
     // Turn on LED when GSM is ready.
     digitalWrite(gsmStatusLed, HIGH);
+    
+    // Test sending an SMS message.
+    if (sms.SendSMS("639000000000", "A text message to verify if GSM shield is working.")) {
+      Serial.println("\nSMS sent OK");
+    }
   }
 };
 
 void loop() {
   if(started) {
-    // Test sending an SMS message.
-    if (sms.SendSMS("639000000000", "A text message to verify if GSM shield is working.")) {
-      Serial.println("\nSMS sent OK");
-    }
-
     // Read if there are messages on SIM card and print them.
-    // if(gsm.readSMS(smsbuffer, 160, n, 20)) {
-    //   Serial.println(n);
-    //   Serial.println(smsbuffer);
-    // }
+    if(gsm.readSMS(smsbuffer, 160, n, 20)) {
+      Serial.println(n);
+      Serial.println(smsbuffer);
+    }
 
     delay(1000);
   }
