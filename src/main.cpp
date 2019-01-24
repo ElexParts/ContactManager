@@ -48,13 +48,23 @@ void setup() {
 };
 
 void loop() {
+  char position;
+  char phone_num[20]; // array for the phone number string
+  char sms_text[100]; // array for the SMS text string
+  
   if(started) {
-    // Read if there are messages on SIM card and print them.
-    if(gsm.readSMS(smsbuffer, 160, n, 20)) {
-      Serial.println(n);
-      Serial.println(smsbuffer);
+    position = sms.IsSMSPresent(SMS_UNREAD);
+    if (position) {
+      // there is new SMS => read it
+      sms.GetSMS(position, phone_num, sms_text, 100);
+      #ifdef DEBUG_PRINT
+        gsm.DebugPrint("DEBUG SMS phone number: ", 0);
+        gsm.DebugPrint(phone_num, 0);
+        gsm.DebugPrint("\r\n          SMS text: ", 0);
+        gsm.DebugPrint(sms_text, 1);
+      #endif
     }
 
-    delay(1000);
+    delay(15000);
   }
 };
