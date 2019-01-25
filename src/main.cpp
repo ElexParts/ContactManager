@@ -42,9 +42,11 @@ void setup() {
     // Turn on LED when GSM is ready.
     digitalWrite(gsmStatusLed, HIGH);
     
-    // Test sending an SMS message.
-    if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
-      Serial.println("\nSMS sent OK");
+    if (debug) {
+      // Test sending an SMS message.
+      if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
+        Serial.println("\nSMS sent OK");
+      }
     }
   }
 };
@@ -55,17 +57,23 @@ void loop() {
   char sms_text[100]; // array for the SMS text string
   
   if(started) {
+    // Get position of latest unread SMS.
     position = sms.IsSMSPresent(SMS_UNREAD);
-    Serial.println(position);
+
+    if (debug) {
+      Serial.println(position);
+    }
+
     if (position > 0) {
       // Get the unread message.
       sms.GetSMS(position, phone_num, sms_text, 100);
-      if (debug) {
-        // Send an auto-reply message.
-        if (sms.SendSMS(phone_num, "Thanks for contacting us. We'll review your message and get in touch with you shortly.")) {
-          Serial.println("\nAuto-reply message is sent.");
-        }
 
+      // Send an auto-reply message.
+      if (sms.SendSMS(phone_num, "Thanks for contacting us. We'll review your message and get in touch with you shortly.")) {
+        Serial.println("\nAuto-reply message is sent.");
+      }
+
+      if (debug) {
         // Print information of the sender.
         Serial.println("Phone number: ");
         Serial.println(phone_num);
