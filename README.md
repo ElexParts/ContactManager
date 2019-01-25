@@ -7,7 +7,7 @@ Manage your contacts and send them SMS messages.
 
 Arduino Uno \
 ITEAD SIM900 GSM/GPRS module \
-LED \
+LED
 
 ### Tools
 
