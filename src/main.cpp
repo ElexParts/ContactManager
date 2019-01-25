@@ -51,7 +51,10 @@ void setup() {
   }
 };
 
-void loop() {
+/**
+ * Send an auto-reply message.
+ */
+void autoReply() {
   char position;
   char phone_num[14]; // array for the phone number string
   char sms_text[100]; // array for the SMS text string
@@ -78,4 +81,9 @@ void loop() {
 
     delay(1000);
   }
+};
+
+void loop() {
+  // Send an auto-reply message.
+  autoReply();
 };
