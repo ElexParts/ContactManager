@@ -21,6 +21,8 @@ boolean started = false;
 char smsbuffer[160];
 char n[20];
 
+boolean debug = true; // Set flag for debugging.
+
 void setup() {
   pinMode(gsmStatusLed, OUTPUT);
 
@@ -41,7 +43,7 @@ void setup() {
     digitalWrite(gsmStatusLed, HIGH);
     
     // Test sending an SMS message.
-    if (sms.SendSMS("639000000000", "A text message to verify if GSM shield is working.")) {
+    if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
       Serial.println("\nSMS sent OK");
     }
   }
@@ -49,22 +51,29 @@ void setup() {
 
 void loop() {
   char position;
-  char phone_num[20]; // array for the phone number string
+  char phone_num[14]; // array for the phone number string
   char sms_text[100]; // array for the SMS text string
   
   if(started) {
     position = sms.IsSMSPresent(SMS_UNREAD);
-    if (position) {
-      // there is new SMS => read it
+    Serial.println(position);
+    if (position > 0) {
+      // Get the unread message.
       sms.GetSMS(position, phone_num, sms_text, 100);
-      #ifdef DEBUG_PRINT
-        gsm.DebugPrint("DEBUG SMS phone number: ", 0);
-        gsm.DebugPrint(phone_num, 0);
-        gsm.DebugPrint("\r\n          SMS text: ", 0);
-        gsm.DebugPrint(sms_text, 1);
-      #endif
+      if (debug) {
+        // Send an auto-reply message.
+        if (sms.SendSMS(phone_num, "Thanks for contacting us. We'll review your message and get in touch with you shortly.")) {
+          Serial.println("\nAuto-reply message is sent.");
+        }
+
+        // Print information of the sender.
+        Serial.println("Phone number: ");
+        Serial.println(phone_num);
+        Serial.println("SMS text: ");
+        Serial.println(sms_text);
+      }
     }
 
-    delay(15000);
+    delay(10000);
   }
 };
