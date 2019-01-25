@@ -17,6 +17,6 @@ Visual Studio Code + PlatformIO IDE extenstion
 
 ![SIM900 Wiring Diagram](https://github.com/ElexParts/ContactManager/blob/master/img/sim900-wiring-diagram.png)
 
-###### Credits
+###### Contributors
 
 Romualdo Dasig<https://github.com/dasigr>
