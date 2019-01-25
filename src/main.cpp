@@ -44,9 +44,9 @@ void setup() {
     
     if (debug) {
       // Test sending an SMS message.
-      if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
-        Serial.println("\nSMS sent OK");
-      }
+      // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
+      //   Serial.println("\nSMS sent OK");
+      // }
     }
   }
 };
@@ -58,13 +58,13 @@ void loop() {
   
   if(started) {
     // Get position of latest unread SMS.
-    position = sms.IsSMSPresent(SMS_UNREAD);
+    position = sms.IsSMSPresent(SMS_ALL);
 
     if (debug) {
       Serial.println(position);
     }
 
-    if (position > 0) {
+    if (position) {
       // Get the unread message.
       sms.GetSMS(position, phone_num, sms_text, 100);
 
@@ -73,15 +73,9 @@ void loop() {
         Serial.println("\nAuto-reply message is sent.");
       }
 
-      if (debug) {
-        // Print information of the sender.
-        Serial.println("Phone number: ");
-        Serial.println(phone_num);
-        Serial.println("SMS text: ");
-        Serial.println(sms_text);
-      }
+      sms.DeleteSMS(position);
     }
 
-    delay(10000);
+    delay(1000);
   }
 };
