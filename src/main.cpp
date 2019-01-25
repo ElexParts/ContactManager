@@ -18,10 +18,6 @@ SMSGSM sms;
 // _GSM_RXPIN_ was set to 3
 int gsmStatusLed = 12;
 boolean started = false;
-char smsbuffer[160];
-char n[20];
-
-boolean debug = true; // Set flag for debugging.
 
 void setup() {
   pinMode(gsmStatusLed, OUTPUT);
@@ -42,12 +38,10 @@ void setup() {
     // Turn on LED when GSM is ready.
     digitalWrite(gsmStatusLed, HIGH);
     
-    if (debug) {
-      // Test sending an SMS message.
-      // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
-      //   Serial.println("\nSMS sent OK");
-      // }
-    }
+    // Test sending an SMS message.
+    // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
+    //   Serial.println("\nSMS sent OK");
+    // }
   }
 };
 
@@ -62,10 +56,7 @@ void autoReply() {
   if(started) {
     // Get position of latest unread SMS.
     position = sms.IsSMSPresent(SMS_ALL);
-
-    if (debug) {
-      Serial.println(position);
-    }
+    // Serial.println(position);
 
     if (position) {
       // Get the unread message.
