@@ -19,4 +19,4 @@ Visual Studio Code + PlatformIO IDE extenstion
 
 ### Contributors
 
-Romualdo Dasig<https://github.com/dasigr>
+Romualdo Dasig(https://github.com/dasigr)
