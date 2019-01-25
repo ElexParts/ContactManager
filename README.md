@@ -5,9 +5,9 @@ Manage your contacts and send them SMS messages.
 
 ### Hardware
 
-Arduino Uno
-ITEAD SIM900 GSM/GPRS module
-LED
+Arduino Uno \
+ITEAD SIM900 GSM/GPRS module \
+LED \
 
 ### Tools
 
