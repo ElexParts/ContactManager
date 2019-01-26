@@ -162,14 +162,15 @@ void autoReply() {
  */
 void saveMessageToContacts() {
   // Account credentials, we are using Basic Authentication for now.
-  // username
-  // password
+  // USERNAME
+  // PASSWORD
 
   // Base-encode credentials.
   // SECRET_CREDENTIAL
 
   // Get access token.
   numdata = inet.httpGET("www.example.com", 80, "/rest/session/token", msg, 50);
+  // ACCESS_TOKEN
 
   // HTTP Headers.
   // Authorization Basic SECRET_CREDENTIAL
@@ -178,8 +179,18 @@ void saveMessageToContacts() {
   // Accept application/vnd.api+json
 
   // Parameters in json format.
-  // phone_number
-  // message
+  /**
+  {
+    "data": {
+      "type": "node--contact",
+      "attributes": {
+        "title": "Contact",
+        "field_phone_number": "+639000000000",
+        "field_message": "SMS message."
+      }
+    }
+  }
+   */
 
   // Do a POST request.
   const char* parameters;
