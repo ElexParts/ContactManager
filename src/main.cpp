@@ -157,6 +157,35 @@ void autoReply() {
   }
 };
 
+/**
+ * Save message details through a Contacts Service API.
+ */
+void saveMessageToContacts() {
+  // Account credentials, we are using Basic Authentication for now.
+  // username
+  // password
+
+  // Base-encode credentials.
+  // SECRET_CREDENTIAL
+
+  // Get access token.
+  numdata = inet.httpGET("www.example.com", 80, "/rest/session/token", msg, 50);
+
+  // HTTP Headers.
+  // Authorization Basic SECRET_CREDENTIAL
+  // X-CSRF-Token ACCESS_TOKEN
+  // Content-Type application/vnd.api+json
+  // Accept application/vnd.api+json
+
+  // Parameters in json format.
+  // phone_number
+  // message
+
+  // Do a POST request.
+  const char* parameters;
+  numdata = inet.httpPOST("www.example.com", 80, "/json/api/node/contact", parameters, msg, 50);
+}
+
 void loop() {
   // Read for new byte on serial hardware,
   // and write them on NewSoftSerial.
@@ -165,6 +194,9 @@ void loop() {
   // Read for new byte on NewSoftSerial.
   serialswread();
 
+  // Save message details through a Contacts Service API.
+  saveMessageToContacts();
+
   // Send an auto-reply message.
-  autoReply();
+  // autoReply();
 };
