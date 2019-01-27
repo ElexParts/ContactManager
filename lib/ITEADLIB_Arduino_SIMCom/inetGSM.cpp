@@ -92,7 +92,10 @@ int InetGSM::httpPOST(const char* server, int port, const char* path, const char
      gsm.SimpleWrite(server);
      gsm.SimpleWrite("\r\n");
      gsm.SimpleWrite("User-Agent: Arduino\r\n");
-     gsm.SimpleWrite("Content-Type: application/x-www-form-urlencoded\r\n");
+     gsm.SimpleWrite("Authorization: Basic SECRET_CREDENTIAL\r\n");
+     gsm.SimpleWrite("X-CSRF-Token: ACCESS_TOKEN\r\n");
+     gsm.SimpleWrite("Accept: application/vnd.api+json\r\n");
+     gsm.SimpleWrite("Content-Type: application/vnd.api+json\r\n");
      gsm.SimpleWrite("Content-Length: ");
      itoa(strlen(parameters),itoaBuffer,10);
      gsm.SimpleWrite(itoaBuffer);

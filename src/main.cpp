@@ -52,30 +52,20 @@ void setup() {
     // If no needed auth let them blank.
     // APN is from Sun Cellular Network, change it according
     // cellular network provider.
-    if (inet.attachGPRS("minternet", "", "")) {
-      Serial.println("status=ATTACHED");
+    if (inet.attachGPRS("http://globe.com.ph", "", "")) {
+      Serial.println("GPRS Status: ATTACHED");
     }
     else {
-      Serial.println("status=ERROR");
+      Serial.println("GPRS Status: ERROR");
     }
     delay(1000);
 
     // Read IP address.
     gsm.SimpleWriteln("AT+CIFSR");
-    delay(5000);
+    delay(3000);
 
     // Read until serial buffer is empty.
     gsm.WhileSimpleRead();
-
-    // TCP Client GET, send a GET request to the server and
-    // save the reply.
-    numdata=inet.httpGET("www.google.com", 80, "/", msg, 50);
-
-    // Print the results.
-    Serial.println("\nNumber of data received:");
-    Serial.println(numdata);
-    Serial.println("\nData received:");
-    Serial.println(msg);
     
     // Test sending an SMS message.
     // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
@@ -152,8 +142,6 @@ void autoReply() {
 
       sms.DeleteSMS(position);
     }
-
-    delay(1000);
   }
 };
 
@@ -169,8 +157,13 @@ void saveMessageToContacts() {
   // SECRET_CREDENTIAL
 
   // Get access token.
-  numdata = inet.httpGET("www.example.com", 80, "/rest/session/token", msg, 50);
-  // ACCESS_TOKEN
+  numdata = inet.httpGET("dev-elexparts-api.pantheonsite.io", 80, "/rest/session/token", msg, 500);
+
+  // Print the results.
+  Serial.println("\nGET - Number of data received:");
+  Serial.println(numdata);
+  Serial.println("\nGET - Data received:");
+  Serial.println(msg);
 
   // HTTP Headers.
   // Authorization Basic SECRET_CREDENTIAL
@@ -193,8 +186,15 @@ void saveMessageToContacts() {
    */
 
   // Do a POST request.
-  const char* parameters;
-  numdata = inet.httpPOST("www.example.com", 80, "/json/api/node/contact", parameters, msg, 50);
+  // const char* parameters;
+  // parameters = "{\"data\":{\"type\":\"node--temperature\",\"attributes\":{\"title\":\"Temperature\",\"field_value_temperature\":21}}}";
+  // numdata = inet.httpPOST("dev-elexparts-api.pantheonsite.io", 80, "/json/api/node/temperature", parameters, msg, 50);
+
+  // Print the results.
+  // Serial.println("\nPOST - Number of data received:");
+  // Serial.println(numdata);
+  // Serial.println("\nPOST - Data received:");
+  // Serial.println(msg);
 }
 
 void loop() {
@@ -210,4 +210,6 @@ void loop() {
 
   // Send an auto-reply message.
   // autoReply();
+
+  delay(5000);
 };
