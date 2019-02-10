@@ -34,6 +34,10 @@ void setup() {
 
   // Serial connection.
   Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
   Serial.println("Initializing GSM Shield ...");
 
   // Start configuration of shield with baudrate (4800 or lower).
@@ -52,20 +56,20 @@ void setup() {
     // If no needed auth let them blank.
     // APN is from Sun Cellular Network, change it according
     // cellular network provider.
-    if (inet.attachGPRS("http://globe.com.ph", "", "")) {
-      Serial.println("GPRS Status: ATTACHED");
-    }
-    else {
-      Serial.println("GPRS Status: ERROR");
-    }
-    delay(1000);
+    // if (inet.attachGPRS("http://globe.com.ph", "", "")) {
+    //   Serial.println("GPRS Status: ATTACHED");
+    // }
+    // else {
+    //   Serial.println("GPRS Status: ERROR");
+    // }
+    // delay(1000);
 
     // Read IP address.
-    gsm.SimpleWriteln("AT+CIFSR");
-    delay(3000);
+    // gsm.SimpleWriteln("AT+CIFSR");
+    // delay(3000);
 
     // Read until serial buffer is empty.
-    gsm.WhileSimpleRead();
+    // gsm.WhileSimpleRead();
     
     // Test sending an SMS message.
     // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
@@ -109,38 +113,38 @@ void serialhwread() {
     }
     inSerial[0]='\0';
   }
-}
+};
 
 /**
  * Serial software read.
  */
 void serialswread() {
   gsm.SimpleRead();
-}
+};
 
 /**
  * Send an auto-reply message.
  */
 void autoReply() {
-  char position;
+  int sms_position;
   char phone_num[14]; // array for the phone number string
   char sms_text[100]; // array for the SMS text string
   
   if(started) {
     // Get position of latest unread SMS.
-    position = sms.IsSMSPresent(SMS_ALL);
-    // Serial.println(position);
+    sms_position = sms.IsSMSPresent(SMS_UNREAD);
+    Serial.print("SMS position: ");
+    Serial.println(sms_position);
 
-    if (position) {
+    if (sms_position > 0) {
       // Get the unread message.
-      sms.GetSMS(position, phone_num, sms_text, 100);
+      sms.GetSMS(sms_position, phone_num, sms_text, 100);
 
       // Send an auto-reply message.
       if (sms.SendSMS(phone_num, "Thanks for contacting us. We'll review your message and get in touch with you shortly.")) {
-        Serial.println("\nAuto-reply message is sent.");
+        Serial.print("\nAuto-reply message is sent to ");
+        Serial.println(phone_num);
       }
-
-      sms.DeleteSMS(position);
     }
   }
 };
@@ -157,7 +161,7 @@ void saveMessageToContacts() {
   // SECRET_CREDENTIAL
 
   // Get access token.
-  numdata = inet.httpGET("dev-elexparts-api.pantheonsite.io", 80, "/rest/session/token", msg, 1000);
+  numdata = inet.httpGET("api.elexlabs.com", 80, "/rest/session/token", msg, 1000);
 
   // Print the results.
   // Serial.println("\nGET - Number of data received:");
@@ -237,21 +241,21 @@ void saveMessageToContacts() {
   // Serial.println(numdata);
   // Serial.println("\nPOST - Data received:");
   // Serial.println(msg);
-}
+};
 
 void loop() {
   // Read for new byte on serial hardware,
   // and write them on NewSoftSerial.
-  serialhwread();
+  // serialhwread();
 
   // Read for new byte on NewSoftSerial.
-  serialswread();
+  // serialswread();
 
   // Save message details through a Contacts Service API.
-  saveMessageToContacts();
+  // saveMessageToContacts();
 
   // Send an auto-reply message.
-  // autoReply();
+  autoReply();
 
-  delay(30000);
+  delay(10000);
 };

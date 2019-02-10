@@ -2,6 +2,7 @@
 #define _SMS_H_
 
 #include "SIM900.h"
+#include "string.h"
 
 class SMSGSM {
 public:
