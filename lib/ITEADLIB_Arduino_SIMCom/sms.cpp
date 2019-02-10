@@ -220,7 +220,7 @@ char SMSGSM::IsSMSPresent(byte required_status)
                Serial.println(p_char);
 
                if (p_char != NULL) {
-                    String sms_message = String(p_char);
+                    String sms_message = String(p_char).substring(0, 16);
                     int colonPosition = sms_message.indexOf(':', 0);
                     int commaPosition = sms_message.indexOf(',', 0);
                     int sms_position = sms_message.substring(colonPosition + 2, commaPosition).toInt();

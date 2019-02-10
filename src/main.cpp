@@ -56,20 +56,20 @@ void setup() {
     // If no needed auth let them blank.
     // APN is from Sun Cellular Network, change it according
     // cellular network provider.
-    // if (inet.attachGPRS("http://globe.com.ph", "", "")) {
-    //   Serial.println("GPRS Status: ATTACHED");
-    // }
-    // else {
-    //   Serial.println("GPRS Status: ERROR");
-    // }
-    // delay(1000);
+    if (inet.attachGPRS("http://globe.com.ph", "", "")) {
+      Serial.println("GPRS Status: ATTACHED");
+    }
+    else {
+      Serial.println("GPRS Status: ERROR");
+    }
+    delay(1000);
 
     // Read IP address.
-    // gsm.SimpleWriteln("AT+CIFSR");
-    // delay(3000);
+    gsm.SimpleWriteln("AT+CIFSR");
+    delay(3000);
 
     // Read until serial buffer is empty.
-    // gsm.WhileSimpleRead();
+    gsm.WhileSimpleRead();
     
     // Test sending an SMS message.
     // if (sms.SendSMS("+639XXXXXXXXX", "GSM Module is initialized.")) {
@@ -132,9 +132,7 @@ void autoReply() {
   
   if(started) {
     // Get position of latest unread SMS.
-    sms_position = sms.IsSMSPresent(SMS_UNREAD);
-    Serial.print("SMS position: ");
-    Serial.println(sms_position);
+    sms_position = sms.IsSMSPresent(SMS_ALL);
 
     if (sms_position > 0) {
       // Get the unread message.
@@ -145,6 +143,8 @@ void autoReply() {
         Serial.print("\nAuto-reply message is sent to ");
         Serial.println(phone_num);
       }
+
+      sms.DeleteSMS(sms_position);
     }
   }
 };
@@ -246,10 +246,10 @@ void saveMessageToContacts() {
 void loop() {
   // Read for new byte on serial hardware,
   // and write them on NewSoftSerial.
-  // serialhwread();
+  serialhwread();
 
   // Read for new byte on NewSoftSerial.
-  // serialswread();
+  serialswread();
 
   // Save message details through a Contacts Service API.
   // saveMessageToContacts();
@@ -257,5 +257,5 @@ void loop() {
   // Send an auto-reply message.
   autoReply();
 
-  delay(10000);
+  delay(5000);
 };
