@@ -202,9 +202,6 @@ char SMSGSM::IsSMSPresent(byte required_status)
           status = gsm.IsRxFinished();
      } while (status == RX_NOT_FINISHED);
 
-
-
-
      switch (status) {
      case RX_TMOUT_ERR:
           // response was not received in specific time
@@ -219,9 +216,23 @@ char SMSGSM::IsSMSPresent(byte required_status)
                // response is:
                // +CMGL: <index>,<stat>,<oa/da>,,[,<tooa/toda>,<length>]
                // <CR><LF> <data> <CR><LF>OK<CR><LF>
-               p_char = strchr((char *)gsm.comm_buf,':');
+               p_char = (char *)gsm.comm_buf;
+               Serial.println(p_char);
+
                if (p_char != NULL) {
-                    ret_val = atoi(p_char+1);
+                    String sms_message = String(p_char).substring(0, 16);
+                    int colonPosition = sms_message.indexOf(':', 0);
+                    int commaPosition = sms_message.indexOf(',', 0);
+                    int sms_position = sms_message.substring(colonPosition + 2, commaPosition).toInt();
+
+                    Serial.print("Colon position: ");
+                    Serial.println(colonPosition);
+                    Serial.print("Comma position: ");
+                    Serial.println(commaPosition);
+                    Serial.print("SMS position: ");
+                    Serial.println(sms_position);
+
+                    ret_val = sms_position;
                }
           } else {
                // other response like OK or ERROR

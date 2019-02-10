@@ -34,6 +34,10 @@ void setup() {
 
   // Serial connection.
   Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
   Serial.println("Initializing GSM Shield ...");
 
   // Start configuration of shield with baudrate (4800 or lower).
@@ -109,38 +113,38 @@ void serialhwread() {
     }
     inSerial[0]='\0';
   }
-}
+};
 
 /**
  * Serial software read.
  */
 void serialswread() {
   gsm.SimpleRead();
-}
+};
 
 /**
  * Send an auto-reply message.
  */
 void autoReply() {
-  char position;
+  int sms_position;
   char phone_num[14]; // array for the phone number string
   char sms_text[100]; // array for the SMS text string
   
   if(started) {
     // Get position of latest unread SMS.
-    position = sms.IsSMSPresent(SMS_ALL);
-    // Serial.println(position);
+    sms_position = sms.IsSMSPresent(SMS_ALL);
 
-    if (position) {
+    if (sms_position > 0) {
       // Get the unread message.
-      sms.GetSMS(position, phone_num, sms_text, 100);
+      sms.GetSMS(sms_position, phone_num, sms_text, 100);
 
       // Send an auto-reply message.
       if (sms.SendSMS(phone_num, "Thanks for contacting us. We'll review your message and get in touch with you shortly.")) {
-        Serial.println("\nAuto-reply message is sent.");
+        Serial.print("\nAuto-reply message is sent to ");
+        Serial.println(phone_num);
       }
 
-      sms.DeleteSMS(position);
+      sms.DeleteSMS(sms_position);
     }
   }
 };
@@ -157,7 +161,7 @@ void saveMessageToContacts() {
   // SECRET_CREDENTIAL
 
   // Get access token.
-  numdata = inet.httpGET("dev-elexparts-api.pantheonsite.io", 80, "/rest/session/token", msg, 1000);
+  numdata = inet.httpGET("api.elexlabs.com", 80, "/rest/session/token", msg, 1000);
 
   // Print the results.
   // Serial.println("\nGET - Number of data received:");
@@ -237,7 +241,7 @@ void saveMessageToContacts() {
   // Serial.println(numdata);
   // Serial.println("\nPOST - Data received:");
   // Serial.println(msg);
-}
+};
 
 void loop() {
   // Read for new byte on serial hardware,
@@ -248,10 +252,10 @@ void loop() {
   serialswread();
 
   // Save message details through a Contacts Service API.
-  saveMessageToContacts();
+  // saveMessageToContacts();
 
   // Send an auto-reply message.
-  // autoReply();
+  autoReply();
 
-  delay(30000);
+  delay(5000);
 };
